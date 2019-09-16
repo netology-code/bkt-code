@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity() {
                         action = Intent.ACTION_SEND
                         putExtra(
                             Intent.EXTRA_TEXT, """
-                    ${post.author} (${post.created})
+                                ${post.author} (${post.created})
 
-                    ${post.content}
-                """.trimIndent()
+                                ${post.content}
+                            """.trimIndent()
                         )
                         type = "text/plain"
                     }
