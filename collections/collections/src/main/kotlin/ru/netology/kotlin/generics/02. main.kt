@@ -23,4 +23,6 @@ fun main() {
 
     val monoPair = MonoPair(1F, 1L)
     println(monoPair)
+
+    val inherited = UserPostPairInherited(user, post)
 }
