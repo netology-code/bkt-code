@@ -1,0 +1,47 @@
+### Регистрация
+
+POST http://localhost:8888/api/v1/registration
+Content-Type: application/json
+
+{
+  "username": "petya",
+  "password": "password"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.global.set("auth_token", response.body.token);
+});
+%}
+
+### Авторизация (не обязательно - можно использовать сразу из регистрации для всех запросов)
+### User vasya предзашит (чтобы не создавать каждый раз)
+
+POST http://localhost:8888/api/v1/authentication
+Content-Type: application/json
+
+{
+  "username": "vasya",
+  "password": "password"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.global.set("auth_token", response.body.token);
+});
+%}
+
+### me
+
+GET http://localhost:8888/api/v1/me
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
