@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Social App</string>
+    <string name="login">Login</string>
+    <string name="registration">registration</string>
+    <string name="enter_login">Enter login</string>
+    <string name="enter_password">Enter password</string>
+    <string name="success">Success</string>
+    <string name="post_created_successfully">Post created successfully</string>
+    <string name="error_occured">Error occurred</string>
+    <string name="authentication_failed">Authentication failed</string>
+    <string name="registration_failed">Registration failed</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="please_wait">Please wait....</string>
+    <string name="authentication">Authentication</string>
+    <string name="downloading_posts">Downloading posts</string>
+    <string name="creating_new_post">creating new post...</string>
+    <string name="create_new_post">Create new Post</string>
+    <string name="create">create</string>
+    <string name="enter_your_post_content">Enter your post content</string>
+</resources>
