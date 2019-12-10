@@ -11,8 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.startActivity
 import ru.netology.ncraftmedia.R
 
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
@@ -36,24 +34,24 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
           edt_password.error = "Password is incorrect"
         } else {
           launch {
-            dialog =
-              indeterminateProgressDialog(
-                message = R.string.please_wait,
-                title = R.string.authentication
-              ) {
-                setCancelable(false)
-              }
-            val responce =
+            dialog = ProgressDialog(this@MainActivity).apply {
+              setMessage(this@MainActivity.getString(R.string.please_wait))
+              setTitle(R.string.authentication)
+              setCancelable(false)
+              setProgressBarIndeterminate(true)
+              show()
+            }
+            val response =
               Repository.authenticate(
                 edt_login.text.toString(),
                 edt_password.text.toString()
               )
             dialog?.dismiss()
-            if (responce.isSuccessful) {
+            if (response.isSuccessful) {
               Toast.makeText(this@MainActivity, R.string.success, Toast.LENGTH_SHORT)
                 .show()
-              setUserAuth(responce.body()!!.token)
-              Repository.createRetrofitWithAuth(responce.body()!!.token)
+              setUserAuth(response.body()!!.token)
+              Repository.createRetrofitWithAuth(response.body()!!.token)
               val feedActivityIntent =
                 Intent(this@MainActivity, FeedActivity::class.java)
               startActivity(feedActivityIntent)
@@ -83,7 +81,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         AUTHENTICATED_SHARED_KEY, ""
       )
       Repository.createRetrofitWithAuth(token!!)
-      startActivity<FeedActivity>()
+      startActivity(
+        Intent(this, FeedActivity::class.java)
+      )
       finish()
     }
   }

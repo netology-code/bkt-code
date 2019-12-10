@@ -5,19 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_post.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.jetbrains.anko.toast
 import ru.netology.ncraftmedia.R
-import ru.netology.ncraftmedia.crud.Repository
 import ru.netology.ncraftmedia.crud.dto.PostModel
 
 class PostAdapter(val list: List<PostModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+  var likeBtnClickListener: OnLikeBtnClickListener? = null
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
     val view =
       LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
@@ -32,7 +29,12 @@ class PostAdapter(val list: List<PostModel>) : RecyclerView.Adapter<RecyclerView
       bind(list[position])
     }
   }
+
+  interface OnLikeBtnClickListener {
+    fun onLikeBtnClicked(item: PostModel, position: Int)
+  }
 }
+
 
 class PostViewHolder(val adapter: PostAdapter, view: View) : RecyclerView.ViewHolder(view) {
   init {
@@ -42,22 +44,13 @@ class PostViewHolder(val adapter: PostAdapter, view: View) : RecyclerView.ViewHo
         if (currentPosition != RecyclerView.NO_POSITION) {
           val item = adapter.list[currentPosition]
           if (item.likeActionPerforming) {
-            context.toast("Like is performing")
+            Toast.makeText(
+              context,
+              context.getString(R.string.like_in_progress),
+              Toast.LENGTH_SHORT
+            )
           } else {
-            GlobalScope.launch(Dispatchers.Main) {
-              item.likeActionPerforming = true
-              adapter.notifyItemChanged(currentPosition)
-              val response = if (item.likedByMe) {
-                Repository.cancelMyLike(item.id)
-              } else {
-                Repository.likedByMe(item.id)
-              }
-              item.likeActionPerforming = false
-              if (response.isSuccessful) {
-                item.updateLikes(response.body()!!)
-              }
-              adapter.notifyItemChanged(currentPosition)
-            }
+            adapter.likeBtnClickListener?.onLikeBtnClicked(item, currentPosition)
           }
         }
       }
@@ -87,14 +80,16 @@ class PostViewHolder(val adapter: PostAdapter, view: View) : RecyclerView.ViewHo
       contentTv.text = post.content
       likesTv.text = post.likes.toString()
 
-      if (post.likeActionPerforming) {
-        likeBtn.setImageResource(R.drawable.ic_favorite_pending_24dp)
-      } else if (post.likedByMe) {
-        likeBtn.setImageResource(R.drawable.ic_favorite_active_24dp)
-        likesTv.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
-      } else {
-        likeBtn.setImageResource(R.drawable.ic_favorite_inactive_24dp)
-        likesTv.setTextColor(ContextCompat.getColor(context, R.color.colorGrey))
+      when {
+        post.likeActionPerforming -> likeBtn.setImageResource(R.drawable.ic_favorite_pending_24dp)
+        post.likedByMe -> {
+          likeBtn.setImageResource(R.drawable.ic_favorite_active_24dp)
+          likesTv.setTextColor(ContextCompat.getColor(context, R.color.colorRed))
+        }
+        else -> {
+          likeBtn.setImageResource(R.drawable.ic_favorite_inactive_24dp)
+          likesTv.setTextColor(ContextCompat.getColor(context, R.color.colorGrey))
+        }
       }
     }
   }

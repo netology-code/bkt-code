@@ -17,4 +17,7 @@
     <string name="create_new_post">Create new Post</string>
     <string name="create">create</string>
     <string name="enter_your_post_content">Enter your post content</string>
+    <string name="password_arent_match">Password aren\'t the same</string>
+    <string name="password_incorrect">Password is incorrect</string>
+    <string name="like_in_progress">Like is performing</string>
 </resources>

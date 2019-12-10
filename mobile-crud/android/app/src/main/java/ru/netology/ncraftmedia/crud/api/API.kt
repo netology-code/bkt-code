@@ -42,8 +42,8 @@ interface API {
   suspend fun getPosts(): Response<List<PostModel>>
 
   @POST("api/v1/posts/{id}/likes")
-  suspend fun likedByMe(@Path("id")id: Long):Response<PostModel>
+  suspend fun likedByMe(@Path("id") id: Long): Response<PostModel>
 
   @DELETE("api/v1/posts/{id}/likes")
-  suspend fun cancelMyLike(@Path("id")id: Long):Response<PostModel>
+  suspend fun cancelMyLike(@Path("id") id: Long): Response<PostModel>
 }

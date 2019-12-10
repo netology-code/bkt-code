@@ -2,13 +2,12 @@ package ru.netology.ncraftmedia.crud
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_create_post.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.toast
 import ru.netology.ncraftmedia.R
 import java.io.IOException
 
@@ -23,13 +22,13 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     createPostBtn.setOnClickListener {
       launch {
         // Показываем крутилку
-        dialog =
-          indeterminateProgressDialog(
-            message = R.string.please_wait,
-            title = R.string.create_new_post
-          ) {
-            setCancelable(false)
-          }
+        dialog = ProgressDialog(this@CreatePostActivity).apply {
+          setMessage(this@CreatePostActivity.getString(R.string.please_wait))
+          setTitle(R.string.create_new_post)
+          setCancelable(false)
+          setProgressBarIndeterminate(true)
+          show()
+        }
         // Обворачиваем в try catch, потому что возможны ошибки при соединении с сетью
         try {
           val result = Repository.createPost(contentEdt.text.toString())
@@ -41,7 +40,7 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             handleFailedResult()
           }
         } catch (e: IOException) {
-          // обрабоатываем ошибку
+          // обрабатываем ошибку
           handleFailedResult()
         } finally {
           // закрываем диалог
@@ -54,11 +53,11 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
   }
 
   private fun handleSuccessfullResult() {
-    toast(R.string.post_created_successfully)
+    Toast.makeText(this, R.string.post_created_successfully, Toast.LENGTH_SHORT)
     finish()
   }
 
   private fun handleFailedResult() {
-    toast(R.string.error_occured)
+    Toast.makeText(this, R.string.error_occured, Toast.LENGTH_SHORT)
   }
 }
