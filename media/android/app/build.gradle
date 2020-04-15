@@ -53,6 +53,7 @@ android {
         implementation "androidx.work:work-runtime-ktx:2.2.0"
         // Anko Commons(общее)
         implementation "org.jetbrains.anko:anko-commons:0.10.8"
+        implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
         testImplementation 'junit:junit:4.12'
         androidTestImplementation 'androidx.test:runner:1.1.1'
         androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'

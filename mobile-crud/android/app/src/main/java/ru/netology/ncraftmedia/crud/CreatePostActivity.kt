@@ -4,14 +4,13 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_create_post.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
 import java.io.IOException
 
-class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class CreatePostActivity : AppCompatActivity() {
 
   private var dialog: ProgressDialog? = null
 
@@ -20,7 +19,7 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     setContentView(R.layout.activity_create_post)
 
     createPostBtn.setOnClickListener {
-      launch {
+      lifecycleScope.launch {
         // Показываем крутилку
         dialog = ProgressDialog(this@CreatePostActivity).apply {
           setMessage(this@CreatePostActivity.getString(R.string.please_wait))

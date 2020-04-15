@@ -3,21 +3,15 @@ package ru.netology.kotlin.ncraftmedia
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.design.longSnackbar
-import ru.netology.kotlin.ncraftmedia.api.Repository
-import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity(), CoroutineScope {
-    private val job = SupervisorJob()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +48,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }
 
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            launch {
+            lifecycleScope.launch {
                 println(it.token)
 //                Repository.registerPushToken(it.token)
             }

@@ -5,16 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_feed.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
 import ru.netology.ncraftmedia.crud.adapter.PostAdapter
 import ru.netology.ncraftmedia.crud.dto.PostModel
 
-class FeedActivity : AppCompatActivity(), CoroutineScope by MainScope(),
+class FeedActivity : AppCompatActivity(),
   PostAdapter.OnLikeBtnClickListener {
   private var dialog: ProgressDialog? = null
 
@@ -30,7 +29,7 @@ class FeedActivity : AppCompatActivity(), CoroutineScope by MainScope(),
 
   override fun onStart() {
     super.onStart()
-    launch {
+    lifecycleScope.launch {
       dialog = ProgressDialog(this@FeedActivity).apply {
         setMessage(this@FeedActivity.getString(R.string.please_wait))
         setTitle(R.string.downloading_posts)
@@ -54,7 +53,7 @@ class FeedActivity : AppCompatActivity(), CoroutineScope by MainScope(),
   }
 
   override fun onLikeBtnClicked(item: PostModel, position: Int) {
-    launch {
+    lifecycleScope.launch {
       item.likeActionPerforming = true
       with(container) {
         adapter?.notifyItemChanged(position)
