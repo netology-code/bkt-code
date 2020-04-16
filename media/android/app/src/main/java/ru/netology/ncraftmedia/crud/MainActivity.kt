@@ -4,16 +4,16 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.startActivity
 import ru.netology.ncraftmedia.R
+import splitties.activities.start
+import splitties.toast.toast
 
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
@@ -50,8 +50,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
               )
             dialog?.dismiss()
             if (responce.isSuccessful) {
-              Toast.makeText(this@MainActivity, R.string.success, Toast.LENGTH_SHORT)
-                .show()
+              toast(R.string.success)
               setUserAuth(responce.body()!!.token)
               Repository.createRetrofitWithAuth(responce.body()!!.token)
               val feedActivityIntent =
@@ -59,11 +58,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
               startActivity(feedActivityIntent)
               finish()
             } else {
-              Toast.makeText(
-                this@MainActivity,
-                R.string.authentication_failed,
-                Toast.LENGTH_SHORT
-              ).show()
+              toast(R.string.authentication_failed)
             }
           }
         }
@@ -83,7 +78,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         AUTHENTICATED_SHARED_KEY, ""
       )
       Repository.createRetrofitWithAuth(token!!)
-      startActivity<FeedActivity>()
+      start<FeedActivity>()
       finish()
     }
   }
@@ -94,10 +89,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     )?.isNotEmpty() ?: false
 
   private fun setUserAuth(token: String) =
-    getSharedPreferences(API_SHARED_FILE, Context.MODE_PRIVATE)
-      .edit()
-      .putString(AUTHENTICATED_SHARED_KEY, token)
-      .commit()
+    getSharedPreferences(API_SHARED_FILE, Context.MODE_PRIVATE).edit {
+        putString(AUTHENTICATED_SHARED_KEY, token)
+    }
 
   override fun onStop() {
     super.onStop()

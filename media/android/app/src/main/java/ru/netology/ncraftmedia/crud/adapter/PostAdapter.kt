@@ -10,10 +10,11 @@ import kotlinx.android.synthetic.main.item_post.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.toast
 import ru.netology.ncraftmedia.R
 import ru.netology.ncraftmedia.crud.Repository
 import ru.netology.ncraftmedia.crud.dto.PostModel
+import splitties.activities.startActivity
+import splitties.toast.toast
 
 class PostAdapter(val list: MutableList<PostModel>) :
   RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -68,8 +69,7 @@ class PostViewHolder(val adapter: PostAdapter, view: View) : RecyclerView.ViewHo
       shareBtn.setOnClickListener {
         if (adapterPosition != RecyclerView.NO_POSITION) {
           val item = adapter.list[adapterPosition]
-          val intent = Intent().apply {
-            action = Intent.ACTION_SEND
+          itemView.context.startActivity(Intent.ACTION_SEND) {
             putExtra(
               Intent.EXTRA_TEXT, """
                                 ${item.ownerName} (${item.created})
@@ -79,7 +79,6 @@ class PostViewHolder(val adapter: PostAdapter, view: View) : RecyclerView.ViewHo
             )
             type = "text/plain"
           }
-          itemView.context.startActivity(intent)
         }
       }
     }

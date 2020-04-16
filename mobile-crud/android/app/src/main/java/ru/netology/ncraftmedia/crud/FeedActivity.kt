@@ -1,9 +1,7 @@
 package ru.netology.ncraftmedia.crud
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_feed.*
@@ -13,6 +11,8 @@ import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
 import ru.netology.ncraftmedia.crud.adapter.PostAdapter
 import ru.netology.ncraftmedia.crud.dto.PostModel
+import splitties.activities.start
+import splitties.toast.toast
 
 class FeedActivity : AppCompatActivity(), CoroutineScope by MainScope(),
   PostAdapter.OnLikeBtnClickListener {
@@ -22,9 +22,7 @@ class FeedActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_feed)
     fab.setOnClickListener {
-      startActivity(
-        Intent(this, CreatePostActivity::class.java)
-      )
+      start<CreatePostActivity>()
     }
   }
 
@@ -48,7 +46,7 @@ class FeedActivity : AppCompatActivity(), CoroutineScope by MainScope(),
           }
         }
       } else {
-        Toast.makeText(this@FeedActivity, R.string.error_occured, Toast.LENGTH_SHORT)
+        toast(R.string.error_occured)
       }
     }
   }
