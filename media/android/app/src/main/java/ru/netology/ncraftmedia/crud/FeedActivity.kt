@@ -3,10 +3,9 @@ package ru.netology.ncraftmedia.crud
 import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_feed.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
 import ru.netology.ncraftmedia.crud.adapter.PostAdapter
@@ -15,7 +14,7 @@ import splitties.toast.toast
 import java.io.IOException
 
 
-class FeedActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class FeedActivity : AppCompatActivity() {
 
   private var dialog: ProgressDialog? = null
   private var adapter: PostAdapter? = null
@@ -29,7 +28,7 @@ class FeedActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
   override fun onStart() {
     super.onStart()
-    launch {
+    lifecycleScope.launch {
       dialog =
         indeterminateProgressDialog(
           message = R.string.please_wait,

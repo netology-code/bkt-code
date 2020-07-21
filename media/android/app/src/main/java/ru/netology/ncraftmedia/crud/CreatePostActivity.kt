@@ -6,9 +6,8 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.create_post.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
 import ru.netology.ncraftmedia.crud.dto.AttachmentModel
@@ -16,7 +15,7 @@ import ru.netology.ncraftmedia.crud.dto.AttachmentType
 import splitties.toast.toast
 import java.io.IOException
 
-class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class CreatePostActivity : AppCompatActivity() {
 
   val REQUEST_IMAGE_CAPTURE = 1
   private var dialog: ProgressDialog? = null
@@ -28,7 +27,7 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
 
     createPostBtn.setOnClickListener {
-      launch {
+      lifecycleScope.launch {
         // Показываем крутилку
         dialog =
           createProgressDialog()
@@ -68,7 +67,7 @@ class CreatePostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       val imageBitmap = data?.extras?.get("data") as Bitmap?
       imageBitmap?.let {
-        launch {
+        lifecycleScope.launch {
           dialog = createProgressDialog()
           val imageUploadResult = Repository.upload(it)
           NotifictionHelper.mediaUploaded(AttachmentType.IMAGE, this@CreatePostActivity)

@@ -4,16 +4,14 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
 import splitties.activities.start
 import splitties.toast.toast
 
-class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class MainActivity : AppCompatActivity() {
 
   private var dialog: ProgressDialog? = null
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +30,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         if (!isValid(edt_password.text.toString())) {
           edt_password.error = "Password is incorrect"
         } else {
-          launch {
+          lifecycleScope.launch {
             dialog = ProgressDialog(this@MainActivity).apply {
               setMessage(this@MainActivity.getString(R.string.please_wait))
               setTitle(R.string.authentication)
@@ -87,10 +85,4 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
       .edit()
       .putString(AUTHENTICATED_SHARED_KEY, token)
       .commit()
-
-  override fun onStop() {
-    super.onStop()
-    cancel()
-    dialog?.dismiss()
-  }
 }

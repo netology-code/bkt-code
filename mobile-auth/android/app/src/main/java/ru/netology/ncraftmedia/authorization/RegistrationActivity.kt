@@ -4,16 +4,14 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.core.content.edit
 import kotlinx.android.synthetic.main.activity_registration.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
 import splitties.toast.toast
 
-class RegistrationActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class RegistrationActivity : AppCompatActivity() {
 
     private var dialog: ProgressDialog? = null
 
@@ -29,7 +27,7 @@ class RegistrationActivity : AppCompatActivity(), CoroutineScope by MainScope() 
             } else if (!isValid(password)) {
                 toast("Password is incorrect")
             } else {
-                launch {
+                lifecycleScope.launch {
                     dialog =
                         indeterminateProgressDialog(
                             message = R.string.please_wait,
@@ -54,13 +52,8 @@ class RegistrationActivity : AppCompatActivity(), CoroutineScope by MainScope() 
     }
 
     private fun setUserAuth(token: String) =
-        getSharedPreferences(API_SHARED_FILE, Context.MODE_PRIVATE).edit {
-            putString(AUTHENTICATED_SHARED_KEY, token)
-        }
-
-    override fun onStop() {
-        super.onStop()
-        dialog?.dismiss()
-        cancel()
-    }
+        getSharedPreferences(API_SHARED_FILE, Context.MODE_PRIVATE)
+            .edit()
+            .putString(AUTHENTICATED_SHARED_KEY, token)
+            .commit()
 }
