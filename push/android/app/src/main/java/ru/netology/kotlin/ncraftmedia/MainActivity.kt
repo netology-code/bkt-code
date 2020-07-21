@@ -3,14 +3,15 @@ package ru.netology.kotlin.ncraftmedia
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
-import org.jetbrains.anko.design.longSnackbar
-import ru.netology.kotlin.ncraftmedia.api.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity(), CoroutineScope {
@@ -33,9 +34,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private fun setUserAuth(token: String) =
         getSharedPreferences(API_SHARED_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString(AUTHENTICATED_SHARED_KEY, token)
-            .commit()
+            .edit {
+                putString(AUTHENTICATED_SHARED_KEY, token)
+            }
 
     private fun requestToken() {
         with(GoogleApiAvailability.getInstance()) {

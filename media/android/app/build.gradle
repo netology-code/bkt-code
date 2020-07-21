@@ -51,8 +51,9 @@ android {
         kapt 'com.github.bumptech.glide:compiler:4.10.0'
         // Kotlin + coroutines
         implementation "androidx.work:work-runtime-ktx:2.2.0"
-        // Anko Commons(общее)
-        implementation "org.jetbrains.anko:anko-commons:0.10.8"
+        def splitties_version = "2.1.1"
+        implementation "com.louiscad.splitties:splitties-toast:$splitties_version"
+        implementation "com.louiscad.splitties:splitties-activities:$splitties_version"
         testImplementation 'junit:junit:4.12'
         androidTestImplementation 'androidx.test:runner:1.1.1'
         androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'

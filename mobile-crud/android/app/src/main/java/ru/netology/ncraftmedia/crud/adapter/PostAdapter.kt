@@ -5,12 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_post.view.*
 import ru.netology.ncraftmedia.R
 import ru.netology.ncraftmedia.crud.dto.PostModel
+import splitties.activities.startActivity
+import splitties.toast.toast
 
 class PostAdapter(val list: List<PostModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
   var likeBtnClickListener: OnLikeBtnClickListener? = null
@@ -44,11 +45,7 @@ class PostViewHolder(val adapter: PostAdapter, view: View) : RecyclerView.ViewHo
         if (currentPosition != RecyclerView.NO_POSITION) {
           val item = adapter.list[currentPosition]
           if (item.likeActionPerforming) {
-            Toast.makeText(
-              context,
-              context.getString(R.string.like_in_progress),
-              Toast.LENGTH_SHORT
-            )
+              context.toast(context.getString(R.string.like_in_progress))
           } else {
             adapter.likeBtnClickListener?.onLikeBtnClicked(item, currentPosition)
           }
@@ -57,8 +54,7 @@ class PostViewHolder(val adapter: PostAdapter, view: View) : RecyclerView.ViewHo
       shareBtn.setOnClickListener {
         if (adapterPosition != RecyclerView.NO_POSITION) {
           val item = adapter.list[adapterPosition]
-          val intent = Intent().apply {
-            action = Intent.ACTION_SEND
+          itemView.context.startActivity(Intent.ACTION_SEND) {
             putExtra(
               Intent.EXTRA_TEXT, """
                                 ${item.ownerName} (${item.created})
@@ -68,7 +64,6 @@ class PostViewHolder(val adapter: PostAdapter, view: View) : RecyclerView.ViewHo
             )
             type = "text/plain"
           }
-          itemView.context.startActivity(intent)
         }
       }
     }
