@@ -2,14 +2,14 @@ package ru.netology.ncraftmedia.crud
 
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
+import splitties.activities.start
+import splitties.toast.toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,8 +23,7 @@ class MainActivity : AppCompatActivity() {
         AUTHENTICATED_SHARED_KEY, ""
       )
       Repository.createRetrofitWithAuth(token!!)
-      val feedActivityIntent = Intent(this@MainActivity, FeedActivity::class.java)
-      startActivity(feedActivityIntent)
+      start<FeedActivity>()
       finish()
     } else {
       btn_login.setOnClickListener {
@@ -46,20 +45,13 @@ class MainActivity : AppCompatActivity() {
               )
             dialog?.dismiss()
             if (response.isSuccessful) {
-              Toast.makeText(this@MainActivity, R.string.success, Toast.LENGTH_SHORT)
-                .show()
+              toast(R.string.success)
               setUserAuth(response.body()!!.token)
               Repository.createRetrofitWithAuth(response.body()!!.token)
-              val feedActivityIntent =
-                Intent(this@MainActivity, FeedActivity::class.java)
-              startActivity(feedActivityIntent)
+              start<FeedActivity>()
               finish()
             } else {
-              Toast.makeText(
-                this@MainActivity,
-                R.string.authentication_failed,
-                Toast.LENGTH_SHORT
-              ).show()
+              toast(R.string.authentication_failed)
             }
           }
         }
@@ -67,8 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     btn_registration.setOnClickListener {
-      val registrationIntent = Intent(this@MainActivity, RegistrationActivity::class.java)
-      startActivity(registrationIntent)
+      start<RegistrationActivity>()
     }
   }
 
@@ -79,9 +70,7 @@ class MainActivity : AppCompatActivity() {
         AUTHENTICATED_SHARED_KEY, ""
       )
       Repository.createRetrofitWithAuth(token!!)
-      startActivity(
-        Intent(this, FeedActivity::class.java)
-      )
+      start<FeedActivity>()
       finish()
     }
   }

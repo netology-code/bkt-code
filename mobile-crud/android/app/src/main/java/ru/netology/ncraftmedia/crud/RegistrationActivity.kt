@@ -3,12 +3,12 @@ package ru.netology.ncraftmedia.crud
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
+import splitties.toast.toast
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -22,9 +22,9 @@ class RegistrationActivity : AppCompatActivity() {
       val password = edt_registration_password.text.toString()
       val repeatedPassword = edt_registration_repeat_password.text.toString()
       if (password != repeatedPassword) {
-        Toast.makeText(this, getString(R.string.password_arent_match), Toast.LENGTH_SHORT)
+        toast(R.string.password_arent_match)
       } else if (!isValid(password)) {
-        Toast.makeText(this, getString(R.string.password_incorrect), Toast.LENGTH_SHORT)
+        toast(getString(R.string.password_incorrect))
       } else {
         lifecycleScope.launch {
           dialog = ProgressDialog(this@RegistrationActivity).apply {
@@ -37,19 +37,11 @@ class RegistrationActivity : AppCompatActivity() {
           val response = Repository.register(edt_registration_login.text.toString(), password)
           dialog?.dismiss()
           if (response.isSuccessful) {
-            Toast.makeText(
-              this@RegistrationActivity,
-              getString(R.string.success),
-              Toast.LENGTH_SHORT
-            )
+            toast(getString(R.string.success))
             setUserAuth(response.body()!!.token)
             finish()
           } else {
-            Toast.makeText(
-              this@RegistrationActivity,
-              getString(R.string.registration_failed),
-              Toast.LENGTH_SHORT
-            )
+            toast(getString(R.string.registration_failed))
           }
         }
       }

@@ -9,11 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.create_post.*
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.toast
 import ru.netology.ncraftmedia.R
 import ru.netology.ncraftmedia.crud.dto.AttachmentModel
 import ru.netology.ncraftmedia.crud.dto.AttachmentType
+import splitties.toast.toast
 import java.io.IOException
 
 class CreatePostActivity : AppCompatActivity() {

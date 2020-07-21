@@ -2,12 +2,12 @@ package ru.netology.ncraftmedia.crud
 
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_create_post.*
 import kotlinx.coroutines.launch
 import ru.netology.ncraftmedia.R
+import splitties.toast.toast
 import java.io.IOException
 
 class CreatePostActivity : AppCompatActivity() {
@@ -52,11 +52,11 @@ class CreatePostActivity : AppCompatActivity() {
   }
 
   private fun handleSuccessfullResult() {
-    Toast.makeText(this, R.string.post_created_successfully, Toast.LENGTH_SHORT)
+    toast(R.string.post_created_successfully)
     finish()
   }
 
   private fun handleFailedResult() {
-    Toast.makeText(this, R.string.error_occured, Toast.LENGTH_SHORT)
+    toast(R.string.error_occured)
   }
 }

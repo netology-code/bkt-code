@@ -7,11 +7,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_feed.*
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 import ru.netology.ncraftmedia.R
 import ru.netology.ncraftmedia.crud.adapter.PostAdapter
+import splitties.activities.start
+import splitties.toast.toast
 import java.io.IOException
 
 
@@ -23,8 +22,8 @@ class FeedActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_feed)
-    // используется Anko Commons(Intents)
-    fab.setOnClickListener { startActivity<CreatePostActivity>() }
+    // используется Splitties(Activity)
+    fab.setOnClickListener { start<CreatePostActivity>() }
   }
 
   override fun onStart() {
@@ -34,9 +33,7 @@ class FeedActivity : AppCompatActivity() {
         indeterminateProgressDialog(
           message = R.string.please_wait,
           title = R.string.downloading_posts
-        ) {
-          setCancelable(false)
-        }
+        )
       try {
         val result = Repository.getRecent()
         if (result.isSuccessful) {

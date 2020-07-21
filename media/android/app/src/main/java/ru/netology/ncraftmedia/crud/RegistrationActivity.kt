@@ -5,11 +5,11 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.core.content.edit
 import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.toast
 import ru.netology.ncraftmedia.R
+import splitties.toast.toast
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -32,9 +32,7 @@ class RegistrationActivity : AppCompatActivity() {
                         indeterminateProgressDialog(
                             message = R.string.please_wait,
                             title = R.string.authentication
-                        ) {
-                            setCancelable(false)
-                        }
+                        )
                     val responce =
                         Repository.register(
                             edt_registration_login.text.toString(),
