@@ -5,19 +5,17 @@ import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
 import io.ktor.http.*
 import io.ktor.http.content.PartData
-import io.ktor.server.testing.contentType
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
+import io.ktor.utils.io.streams.asInput
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlinx.io.core.Input
-import kotlinx.io.streams.asInput
 import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 class ApplicationTest {
     private val jsonContentType = ContentType.Application.Json.withCharset(Charsets.UTF_8)
@@ -74,7 +72,8 @@ class ApplicationTest {
                     multipartBoundary,
                     listOf(
                         PartData.FileItem({
-                            Files.newInputStream(Paths.get("./src/test/resources/test.png")).asInput()
+                            Files.newInputStream(Paths.get("./src/test/resources/test.png"))
+                                .asInput()
                         }, {}, headersOf(
                             HttpHeaders.ContentDisposition to listOf(
                                 ContentDisposition.File.withParameter(
