@@ -14,12 +14,11 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.server.cio.EngineMain
 import kotlinx.coroutines.runBlocking
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.eagerSingleton
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.with
-import org.kodein.di.ktor.KodeinFeature
-import org.kodein.di.ktor.kodein
+import org.kodein.di.bindEagerSingleton
+import org.kodein.di.instance
+import org.kodein.di.ktor.closestDI
+import org.kodein.di.ktor.di
+import org.kodein.di.with
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import ru.netology.dto.RegistrationRequestDto
@@ -61,27 +60,34 @@ fun Application.module() {
         }
     }
 
-    install(KodeinFeature) {
-        constant(tag = "upload-dir") with (environment.config.propertyOrNull("ncraft.upload.dir")?.getString()
+    di {
+        constant(tag = "upload-dir") with (environment.config.propertyOrNull("ncraft.upload.dir")
+            ?.getString()
             ?: throw ConfigurationException("Upload dir is not specified"))
-        constant(tag = "result-size") with (environment.config.propertyOrNull("ncraft.api.result-size")?.getString()?.toInt()
+        constant(tag = "result-size") with (environment.config.propertyOrNull("ncraft.api.result-size")
+            ?.getString()?.toInt()
             ?: throw ConfigurationException("API result size is not specified"))
-        constant(tag = "jwt-secret") with (environment.config.propertyOrNull("ncraft.jwt.secret")?.getString()
+        constant(tag = "jwt-secret") with (environment.config.propertyOrNull("ncraft.jwt.secret")
+            ?.getString()
             ?: throw ConfigurationException("JWT Secret is not specified"))
-        bind<PasswordEncoder>() with eagerSingleton { BCryptPasswordEncoder() }
-        bind<JWTTokenService>() with eagerSingleton { JWTTokenService(instance(tag = "jwt-secret")) }
-        bind<PostRepository>() with eagerSingleton { PostRepositoryInMemoryWithMutexImpl() }
-        bind<PostService>() with eagerSingleton { PostService(instance(), instance(), instance(tag = "result-size")) }
-        bind<FileService>() with eagerSingleton { FileService(instance(tag = "upload-dir")) }
-        bind<UserRepository>() with eagerSingleton { UserRepositoryInMemoryWithMutexImpl() }
-        bind<UserService>() with eagerSingleton {
-            UserService(instance(), instance(), instance()).apply {
+        bindEagerSingleton<PasswordEncoder> { BCryptPasswordEncoder() }
+        bindEagerSingleton { JWTTokenService(instance(tag = "jwt-secret")) }
+        bindEagerSingleton<PostRepository> { PostRepositoryInMemoryWithMutexImpl() }
+        bindEagerSingleton { PostService(instance(), instance(), instance(tag = "result-size")) }
+        bindEagerSingleton { FileService(instance(tag = "upload-dir")) }
+        bindEagerSingleton<UserRepository> { UserRepositoryInMemoryWithMutexImpl() }
+        bindEagerSingleton {
+            UserService(
+                repo = instance(),
+                tokenService = instance(),
+                passwordEncoder = instance()
+            ).apply {
                 runBlocking {
                     this@apply.register(RegistrationRequestDto("vasya", "password"))
                 }
             }
         }
-        bind<RoutingV1>() with eagerSingleton {
+        bindEagerSingleton {
             RoutingV1(
                 instance(tag = "upload-dir"),
                 instance(),
@@ -93,9 +99,9 @@ fun Application.module() {
 
     install(Authentication) {
         jwt {
-            val jwtService by kodein().instance<JWTTokenService>()
+            val jwtService by closestDI().instance<JWTTokenService>()
             verifier(jwtService.verifier)
-            val userService by kodein().instance<UserService>()
+            val userService by closestDI().instance<UserService>()
 
             validate {
                 val id = it.payload.getClaim("id").asLong()
@@ -105,7 +111,7 @@ fun Application.module() {
     }
 
     install(Routing) {
-        val routingV1 by kodein().instance<RoutingV1>()
+        val routingV1 by closestDI().instance<RoutingV1>()
         routingV1.setup(this)
     }
 }

@@ -9,14 +9,14 @@ import io.ktor.server.testing.contentType
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
+import io.ktor.utils.io.streams.asInput
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlinx.io.streams.asInput
 import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 class ApplicationTest {
     private val jsonContentType = ContentType.Application.Json.withCharset(Charsets.UTF_8)
